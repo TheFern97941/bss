@@ -33,7 +33,7 @@
 		<url/>
 	</scm>
 	<properties>
-		<docker.image.url>dm.robit123.com/dr/d/bss</docker.image.url>
+		<docker.image.url></docker.image.url>
 		<docker.image.tag>main</docker.image.tag>
 		<docker.auth.name>docker</docker.auth.name>
 		<docker.auth.pwd></docker.auth.pwd>
