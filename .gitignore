@@ -1,0 +1,93 @@
+# ===========================
+# OS
+# ===========================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ===========================
+# IDE - IntelliJ IDEA
+# ===========================
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# ===========================
+# IDE - VS Code
+# ===========================
+.vscode/
+.history/
+
+# ===========================
+# Environment & Secrets
+# ===========================
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.cert
+
+# ===========================
+# Logs
+# ===========================
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ===========================
+# Node.js (bss-h5 / pro-demo)
+# ===========================
+node_modules/
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+.npm/
+
+# ===========================
+# Build outputs
+# ===========================
+dist/
+build/
+out/
+coverage/
+.next/
+.nuxt/
+.umi/
+.umi-production/
+.umi-test/
+
+# ===========================
+# Java / Maven (bss-service)
+# ===========================
+target/
+*.class
+*.jar
+!.mvn/wrapper/maven-wrapper.jar
+
+# ===========================
+# Misc
+# ===========================
+*.bak
+*.tmp
+*.swp
+*.swo
+*~
+.temp/
+.cache/
+.eslintcache
+.firebase/

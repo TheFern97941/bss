@@ -1,0 +1,34 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  viewBox="0 0 36 36"
+  width="36"
+  height="36"
+  fill="none"
+  role="img"
+  aria-labelledby="logo-2-title"
+  >
+  <path fill="url(#logo-2-a)" fill-rule="evenodd"
+        d="m17.78 14.361.002.001L10 23 0 11.993V7.245a.644.644 0 0 1 1.055-.495l11.095 9.213a2.895 2.895 0 0 0 3.7 0l1.93-1.602Z"
+        clip-rule="evenodd"></path>
+  <path fill="url(#logo-2-b)"
+        d="m22 10.856-4.22 3.505.002.001-5.588 4.936a2.575 2.575 0 0 1-3.35.05L0 11.993v14.11A2.896 2.896 0 0 0 2.897 29H22l2-9.072-2-9.072Z"></path>
+  <path fill="url(#logo-2-c)" fill-rule="evenodd"
+        d="M22 10.86V29h3.103c1.6 0 2.897-1.297 2.897-2.896V7.245a.644.644 0 0 0-1.055-.495L22 10.86Z"
+        clip-rule="evenodd"></path>
+  <defs>
+    <linearGradient id="logo-2-a" x1="10.507" x2="1.116" y1="23.152" y2="-9.469" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E3D9FF"></stop>
+      <stop offset="1" stop-color="#7341FF"></stop>
+    </linearGradient>
+    <linearGradient id="logo-2-c" x1="37.055" x2="15.455" y1="43.522" y2="-3.075" gradientUnits="userSpaceOnUse">
+      <stop offset=".271" stop-color="#E3D9FF"></stop>
+      <stop offset="1" stop-color="#7341FF"></stop>
+    </linearGradient>
+    <radialGradient id="logo-2-b" cx="0" cy="0" r="1" gradientTransform="matrix(27.9882 0 0 26.381 23.895 13.077)"
+                    gradientUnits="userSpaceOnUse">
+      <stop offset=".556" stop-color="#6D4AFF"></stop>
+      <stop offset=".994" stop-color="#AA8EFF"></stop>
+    </radialGradient>
+  </defs>
+</svg>

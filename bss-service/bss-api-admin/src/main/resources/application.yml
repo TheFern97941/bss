@@ -1,0 +1,105 @@
+server:
+  port: 6000
+  shutdown: "graceful"
+  compression:
+    enabled: true
+spring:
+  profiles:
+    active: default
+  application:
+    name: bss-api-admin
+  lifecycle:
+    timeout-per-shutdown-phase: "30s"
+  jackson:
+    locale: en
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+    defaultPropertyInclusion:
+      NON_NULL
+    deserialization:
+      fail-on-unknown-properties: false
+      fail-on-ignored-properties: true
+    serialization:
+      indent-output: false
+  webflux:
+    problemdetails:
+      enabled: false
+    multipart:
+      max-in-memory-size: 10MB
+    format:
+      date-time: yyyy-MM-dd HH:mm:ss
+      date: yyyy-MM-dd
+      time: HH:mm:ss
+    static-path-pattern: "/resources/**"
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      auto-index-creation: true
+      database: bss
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: 123456
+      database: 3
+      repositories:
+        enabled: false
+  devtools:
+    add-properties: true
+    restart:
+      # 是否允许重启,
+      enabled: true
+      log-condition-evaluation-delta: true
+      exclude: "META-INF/maven/**,META-INF/resources/**,resources/**,static/**,public/**,templates/**,**/*Test.class,**/*Tests.class,git.properties,META-INF/build-info.properties"
+    livereload:
+      port: 4001
+      enabled: false
+  codec:
+    log-request-details: true
+    max-in-memory-size: 5MB
+  output:
+    ansi:
+      enabled: ALWAYS
+logging:
+  include-application-name: false
+  level:
+    root: "INFO"
+    org.springframework.web: DEBUG
+    bss.controller: DEBUG
+    reactor:
+      netty:
+        http:
+          client: ERROR
+    org:
+      springframework:
+        data.mongodb.core.ReactiveMongoTemplate: DEBUG
+        context.support: TRACE
+        web: INFO
+        boot:
+          autoconfigure:
+            logging: DEBUG
+
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+springdoc:
+  show-actuator: false
+  api-docs:
+    enabled: true
+    groups:
+      enabled: true
+  swagger-ui:
+    enabled: true
+core:
+  s3:
+    region: local
+    endpoint: http://192.168.31.51:9000
+    endpointOut: http://192.168.31.51:9000
+    accessKeyId: CRezL5QDT4d6WVlK
+    secretAccessKey: Ai808HBF3cHyHuKCPWiboe0oFIfgb9mc
+    bucket: file

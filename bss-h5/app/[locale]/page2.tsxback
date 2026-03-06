@@ -1,0 +1,109 @@
+"use client";
+
+import { useRef, useState, ReactNode } from "react";
+import ReactFullpage, { fullpageApi, Item } from "@fullpage/react-fullpage";
+import Link from "next/link";
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
+import HomeSection from "@/components/page/home1/HomeSection";
+import ServiceSection from "@/components/page/home1/ServiceSection";
+import AboutSection from "@/components/page/home1/AboutSection";
+import ContactSection from "@/components/page/home1/ContactSection";
+import clsx from "clsx";
+
+
+interface FullPageSection {
+  sectionAnchor: string;
+  navigationTooltip: string;
+  com: ReactNode;
+}
+
+const FullPageSectionList: FullPageSection[] = [
+  { sectionAnchor: "home", navigationTooltip: "首页", com: <HomeSection /> },
+  { sectionAnchor: "services", navigationTooltip: "产品服务", com: <ServiceSection /> },
+  { sectionAnchor: "about", navigationTooltip: "关于我们", com: <AboutSection /> },
+  { sectionAnchor: "contact", navigationTooltip: "联系我们", com: <ContactSection /> },
+];
+
+export default function Page() {
+  const [activeAnchor, setActiveAnchor] = useState<string | number>("home");
+  const fullpageApiRef = useRef<fullpageApi>(undefined);
+
+  const anchors = FullPageSectionList.map((s) => s.sectionAnchor);
+  const navigationTooltips = FullPageSectionList.map((s) => s.navigationTooltip);
+
+  const menuMoveAnchor = (toAnchor: string) => {
+    if (activeAnchor !== toAnchor) {
+      fullpageApiRef.current?.moveTo(toAnchor);
+    }
+  };
+
+  return (
+    <div className="relative">
+      {/* 顶部导航 */}
+      <div className="absolute top-0 left-0 w-full flex justify-between items-center px-12 mt-12 z-10">
+        <div className="w-36 h-12">{/* logo 预留 */}</div>
+        <NavigationMenu viewport={false}>
+          <NavigationMenuList id="myMenu">
+            {FullPageSectionList.map((section) => (
+              <NavigationMenuItem
+                key={section.sectionAnchor}
+                data-menuanchor={section.sectionAnchor}
+              >
+                <NavigationMenuLink
+                  asChild
+                  className={clsx(
+                    navigationMenuTriggerStyle(),
+                    "relative px-4 py-2 transition-colors bg-transparent",
+                    activeAnchor === section.sectionAnchor
+                      ? "font-bold after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-primary after:rounded-full after:transition-all after:duration-300"
+                      : "text-muted-foreground"
+                  )}
+                >
+                  <Link
+                    href={`#${section.sectionAnchor}`}
+                    onClick={() => menuMoveAnchor(section.sectionAnchor)}
+                  >
+                    {section.navigationTooltip}
+                  </Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+            ))}
+          </NavigationMenuList>
+        </NavigationMenu>
+      </div>
+
+      {/* fullpage */}
+      <ReactFullpage
+        menu="#myMenu"
+        lazyLoading={true}
+        navigation
+        navigationPosition="right"
+        navigationTooltips={navigationTooltips}
+        showActiveTooltip={false}
+        slidesNavigation
+        slidesNavPosition="top"
+        autoScrolling
+        recordHistory
+        scrollingSpeed={1000}
+        licenseKey={"123231"}
+        credits={{ enabled: false, label: " ", position: "left" }}
+        anchors={anchors}
+        onLeave={(_, destination: Item) => setActiveAnchor(destination.anchor)}
+        render={({ fullpageApi }) => {
+          fullpageApiRef.current = fullpageApi;
+          return (
+            <ReactFullpage.Wrapper>
+              {FullPageSectionList.map((section) => section.com)}
+            </ReactFullpage.Wrapper>
+          );
+        }}
+      />
+    </div>
+  );
+}
