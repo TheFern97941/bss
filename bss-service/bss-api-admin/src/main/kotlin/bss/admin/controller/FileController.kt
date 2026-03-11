@@ -1,6 +1,5 @@
 package bss.admin.controller
 
-import bss.core.annotation.NotAuth
 import bss.core.annotation.NotSecurity
 import bss.core.annotation.RestService
 import bss.core.s3.S3UploadService

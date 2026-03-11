@@ -1,7 +1,6 @@
 package bss.core.utils
 
 import bss.core.exception.MessageException
-import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.core.convert.ConversionService
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.reactive.function.BodyInserters
@@ -9,7 +8,9 @@ import kotlin.collections.HashMap
 import kotlin.reflect.KClass
 import kotlin.reflect.KParameter
 import kotlin.reflect.KProperty1
+import kotlin.reflect.KType
 import kotlin.reflect.full.*
+import kotlin.reflect.jvm.jvmErasure
 
 
 object DataClassUtils {
@@ -39,100 +40,138 @@ object DataClassUtils {
         return formProperty.get(data)
     }
 
-    fun <T> copy(src: Any, dest: Any, vararg pairs: Pair<String, Any>): T {
-        return doCopy(src, dest, arrayOf(*pairs))
-    }
-
-    fun <T> copy(src: Any, dest: Any, ignoreProperties: Set<String>): T {
-        return doCopy(src, dest, emptyArray(), ignoreProperties)
-    }
-
-    private fun <T> doCopy(
+    fun <T : Any> copy(
         src: Any,
-        dest: Any,
-        pairs: Array<Pair<String, Any>>,
-        ignoreProperties: Set<String>? = null,
+        dest: T,
+        vararg pairs: Pair<String, Any?>,
+        ignoreProperties: Set<String> = emptySet(),
+        conversionService: ConversionService? = null
+    ): T {
+        return doCopy(src, dest, pairs, ignoreProperties, conversionService)
+    }
+
+    private fun <T : Any> doCopy(
+        src: Any,
+        dest: T,
+        pairs: Array<out Pair<String, Any?>>,
+        ignoreProperties: Set<String> = emptySet(),
+        conversionService: ConversionService? = null,
     ): T {
         val copyFun = dest::class.memberFunctions.first { it.name == "copy" }
-        val paramMap = copyFun.parameters.associateBy { it.name }
+        val pairsMap = mapOf(*pairs)
+        val srcPropertiesMap: Map<String, KProperty1<out Any, *>> = src::class.memberProperties.associateBy { it.name }
 
         val args: HashMap<KParameter, Any?> = HashMap()
-        val pairsMap = mapOf(*pairs)
-
         val instanceParam = copyFun.instanceParameter!!
-
         args[instanceParam] = dest
-        src::class.memberProperties.forEach { srcMemberProperty ->
-            if (ignoreProperties?.contains(srcMemberProperty.name) == true) {
+
+        copyFun.parameters.forEach { param ->
+            if (param.kind == KParameter.Kind.INSTANCE) return@forEach
+            val paramName = param.name ?: return@forEach
+            if (ignoreProperties.contains(paramName)) return@forEach
+
+            if (pairsMap.containsKey(paramName)) {
+                args[param] = convertValue(pairsMap[paramName], param.type, conversionService)
                 return@forEach
             }
 
-            val key = paramMap[srcMemberProperty.name]
-            if (key != null) {
-                var value = pairsMap[srcMemberProperty.name]
-                if (value == null) {
-                    value = srcMemberProperty.call(src)
-                    if (value == null && !key.type.isMarkedNullable) {
-                        throw MessageException(
-                            "requiredParameterIsMissingValue",
-                            "required parameter [${srcMemberProperty.name}] is missing a value"
-                        )
-                    }
-                }
-                if (value == null && key.type.isMarkedNullable) {
-                    args.setValue(key, null)
-                } else {
-                    value?.let {v -> args.setValue(key, v) }
+            val srcProp = srcPropertiesMap[paramName]
+            if (srcProp != null) {
+                val srcValue = srcProp.call(src)
+                when {
+                    srcValue != null -> args[param] = convertValue(srcValue, param.type, conversionService)
+                    param.type.isMarkedNullable -> args[param] = null
+                    // srcValue == null && not nullable → skip, callBy uses dest's current value
                 }
             }
+            // src doesn't have this property → skip, preserve dest's current value
         }
 
+        @Suppress("UNCHECKED_CAST")
         return copyFun.callBy(args) as T
     }
 
 
-    fun <T : Any> new(kClass: KClass<T>, src: Any, vararg pairs: Pair<String, Any?>): T {
+    fun <T : Any> new(
+        kClass: KClass<T>,
+        src: Any,
+        vararg pairs: Pair<String, Any?>,
+        ignoreProperties: Set<String> = emptySet(),
+        conversionService: ConversionService? = null
+    ): T {
         val constructor = kClass.primaryConstructor!!
-
-        val srcPropertiesMap = src::class.memberProperties
-            .filter { it.getter.findAnnotation<JsonIgnore>() == null }
-            .associateBy({ it.name }, { it.call(src) })
+        val srcPropertiesMap: Map<String, KProperty1<out Any, *>> = src::class.memberProperties.associateBy { it.name }
 
         val args: HashMap<KParameter, Any?> = HashMap()
-
         val pairsMap = mapOf(*pairs)
 
         constructor.parameters.forEach { param ->
-            var value = pairsMap[param.name]
-            var continueSet = false;
-            if (value == null) {
-                value = srcPropertiesMap[param.name]
-                if (value == null) {
-                    // 有默认值 就用默认值
-                    if (param.isOptional) {
-                        continueSet = true
-                    } else if (param.type.isMarkedNullable) {
-                        // 允许为空, 就设置空
+            val paramName = param.name ?: return@forEach
+            if (ignoreProperties.contains(paramName)) return@forEach
 
-                    } else {
-                        throw MessageException(
-                            "requiredParameterIsMissingValue"
-                            , "required parameter [${param.name}] is missing a value"
-                        )
-                    }
-                }
+            if (pairsMap.containsKey(paramName)) {
+                args[param] = convertValue(pairsMap[paramName], param.type, conversionService)
+                return@forEach
             }
-            if (!continueSet) {
-                args.setValue(param, value)
+
+            val srcProp = srcPropertiesMap[paramName]
+            if (srcProp != null) {
+                val srcValue = srcProp.call(src)
+                when {
+                    srcValue != null -> args[param] = convertValue(srcValue, param.type, conversionService)
+                    param.isOptional -> { /* skip, use declared default value */ }
+                    param.type.isMarkedNullable -> args[param] = null
+                    else -> throw MessageException(
+                        "requiredParameterIsMissingValue",
+                        "required parameter [$paramName] is missing a value"
+                    )
+                }
+            } else {
+                when {
+                    param.isOptional -> { /* skip, use declared default value */ }
+                    param.type.isMarkedNullable -> args[param] = null
+                    else -> throw MessageException(
+                        "requiredParameterIsMissingValue",
+                        "required parameter [$paramName] is missing a value"
+                    )
+                }
             }
         }
         return constructor.callBy(args)
     }
 
-    private fun HashMap<KParameter, Any?>.setValue(
-        param: KParameter,
-        srcValue: Any?,
-    ) {
-        this[param] = srcValue
+    private fun convertValue(
+        value: Any?,
+        targetType: KType,
+        conversionService: ConversionService? = null
+    ): Any? {
+        if (value == null) return null
+        val targetKClass = targetType.jvmErasure
+        // Already matching type
+        if (targetKClass.isInstance(value)) return value
+        // ConversionService
+        if (conversionService?.canConvert(value::class.java, targetKClass.java) == true)
+            return conversionService.convert(value, targetKClass.java)
+        // Number conversions
+        if (value is Number) return when (targetKClass) {
+            Int::class     -> value.toInt()
+            Long::class    -> value.toLong()
+            Double::class  -> value.toDouble()
+            Float::class   -> value.toFloat()
+            Short::class   -> value.toShort()
+            Byte::class    -> value.toByte()
+            String::class  -> value.toString()
+            else           -> value
+        }
+        // String to Number/Boolean conversions
+        if (value is String) return when (targetKClass) {
+            Int::class     -> value.toIntOrNull()             ?: value
+            Long::class    -> value.toLongOrNull()            ?: value
+            Double::class  -> value.toDoubleOrNull()          ?: value
+            Float::class   -> value.toFloatOrNull()           ?: value
+            Boolean::class -> value.toBooleanStrictOrNull()   ?: value
+            else           -> value
+        }
+        return value
     }
 }

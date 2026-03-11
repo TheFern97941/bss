@@ -12,6 +12,7 @@
 
     <artifactId>bss-lib-services</artifactId>
     <name>bss-lib-services</name>
+    <version>0.0.1-SNAPSHOT</version>
 
     <properties>
         <bss-core.version>0.0.1-SNAPSHOT</bss-core.version>
