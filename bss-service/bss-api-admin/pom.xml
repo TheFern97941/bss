@@ -72,7 +72,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<mainClass>bss.BssApplication</mainClass>
+					<mainClass>bss.BssAdminApplication</mainClass>
 				</configuration>
 			</plugin>
 			<plugin>

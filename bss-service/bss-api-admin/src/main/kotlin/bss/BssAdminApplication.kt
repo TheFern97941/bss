@@ -3,9 +3,6 @@ package bss
 import bss.admin.AdminSecurityFilter
 import bss.admin.manager.sys.AdminAccountManager
 import bss.core.page.PageManagerRepositoryFactoryBean
-import bss.core.page.PageReactiveMongoRepositoryImpl
-import org.apache.commons.lang3.StringUtils
-import org.springdoc.core.customizers.OpenApiCustomizer
 import org.springframework.boot.Banner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -31,7 +28,7 @@ import reactor.tools.agent.ReactorDebugAgent
     repositoryFactoryBeanClass = PageManagerRepositoryFactoryBean::class
 )
 @EnableConfigurationProperties
-class BssApplication {
+class BssAdminApplication {
 
     @Bean
     @Order(Ordered.LOWEST_PRECEDENCE)
@@ -62,7 +59,7 @@ class BssApplication {
 }
 
 fun main(args: Array<String>) {
-    runApplication<BssApplication>(*args) {
+    runApplication<BssAdminApplication>(*args) {
         ReactorDebugAgent.init()
         setBannerMode(Banner.Mode.OFF)
     }
