@@ -53,13 +53,10 @@ export default {
   'menu.editor.koni': '拓扑编辑器',
 
   'menu.sys': '系统管理',
-  'menu.sys.adminGroup': '账号',
-  'menu.sys.adminGroup.admin': '帐号管理',
-  'menu.sys.adminGroup.role': '系统角色',
-  'menu.sys.adminGroup.module': '系统模块',
-
-  'menu.sys.settingGroup': '全局设置',
-  'menu.sys.settingGroup.AuthSetting': '授权设置',
+  'menu.sys.admin': '帐号管理',
+  'menu.sys.role': '系统角色',
+  'menu.sys.module': '系统模块',
+  'menu.sys.AuthSetting': '授权设置',
 
 
 };

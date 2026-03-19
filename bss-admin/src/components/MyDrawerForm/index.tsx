@@ -1,9 +1,9 @@
 import {useEffect, useRef, useState} from 'react';
-import {notification, Spin} from 'antd';
+import {Grid, notification, Spin} from 'antd';
 import useAbortController from '@/hooks/useAbortController';
-import type {ProFormInstance} from '@ant-design/pro-form';
-import {DrawerForm} from '@ant-design/pro-form';
-import type {ModalFormProps} from '@ant-design/pro-form/lib/layouts/ModalForm';
+import type { ModalFormProps, ProFormInstance } from '@ant-design/pro-components';
+import {DrawerForm} from '@ant-design/pro-components';
+
 import { omit, isString } from 'lodash';
 
 export type MyDrawerFormProps<T = Record<string, any>> = Omit<ModalFormProps<T>, 'request'> & {
@@ -18,9 +18,11 @@ export type MyDrawerFormProps<T = Record<string, any>> = Omit<ModalFormProps<T>,
 
 
 export function MyDrawerForm<T = Record<string, any>>(props: MyDrawerFormProps<T>) {
-  const {children, loading = false, record, onChange, request, trigger, message = true, onOpenChange, ...rest} = props;
+  const {children, loading = false, record, onChange, request, trigger, message = true, onOpenChange, width, ...rest} = props;
 
   const abortSignal = useAbortController();
+  const screens = Grid.useBreakpoint();
+  const drawerWidth = (width || (screens.xxl || screens.xl || screens.lg ? '50%' : screens.md ? '80%' : '90%')) as string;
   const actionName = props.actionName || (!!record ? '修改' : '添加');
   const formRef = useRef<ProFormInstance>();
   const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -42,15 +44,13 @@ export function MyDrawerForm<T = Record<string, any>>(props: MyDrawerFormProps<T
   }, [record, modalVisible, formRef]);
 
 
-
   return <DrawerForm<T>
     autoFocusFirstInput
     open={modalVisible}
     onOpenChange={setModalVisible}
     trigger={trigger}
     formRef={formRef}
-    // width={{'xxl': "50%", 'xl': "50%", 'lg': "50%" , 'md': "80%" , 'sm': "90%"}}
-    // width={'max-content'}
+    width={drawerWidth}
     onFinish={async (store) => {
       const form = {
         ...record,
@@ -73,7 +73,7 @@ export function MyDrawerForm<T = Record<string, any>>(props: MyDrawerFormProps<T
       onChange?.();
       return true;
     }}
-    {...omit(rest, ['request', 'onChange', 'trigger', 'children', 'record', 'actionName', 'message'])}
+    {...omit(rest, ['request', 'onChange', 'trigger', 'children', 'record', 'actionName', 'message', 'width'])}
   >
     <Spin spinning={loading} tip="正在加载..."> {children}</Spin>
   </DrawerForm>;

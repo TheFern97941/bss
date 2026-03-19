@@ -8,7 +8,7 @@ export interface MyIconProps {
 }
 
 
-export function MyIcon({children, spin}: MyIconProps) {
+export function MyIcon({children, spin = false}: MyIconProps) {
   if (spin) {
     return <Spin indicator={<span className='anticon  ant-spin-dot'>{
       React.cloneElement(children, {
@@ -23,8 +23,4 @@ export function MyIcon({children, spin}: MyIconProps) {
       })
     }
   </span>;
-}
-
-MyIcon.defaultProps = {
-  spin: false
 }

@@ -2,8 +2,7 @@ import { getToken } from '@/utils/authUtil';
 import { Result } from '@/requestErrorConfig';
 import {message, UploadFile} from 'antd';
 import { redirectByTimeout } from '@/utils/redirectUtil';
-import { ProFormUploadButton } from '@ant-design/pro-form';
-import { ProFormUploadButtonProps } from '@ant-design/pro-form/es/components/UploadButton';
+import { ProFormUploadButton, ProFormUploadButtonProps } from '@ant-design/pro-components';
 
 export function convertImageToUploadFormat(url?: string | null, name = '图片'): UploadFile[] {
   if (!url) return [];

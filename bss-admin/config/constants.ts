@@ -5,7 +5,7 @@
 
 // API服务器配置
 export const API_CONFIG = {
-  HOST: '192.168.31.51',
+  HOST: 'localhost',
   PORT: '6000',
   get BASE_URL() {
     return `http://${this.HOST}:${this.PORT}`;
@@ -14,7 +14,7 @@ export const API_CONFIG = {
 
 // 文件服务器配置
 export const FILE_CONFIG = {
-  HOST: '192.168.31.51',
+  HOST: 'localhost',
   PORT: '9000',
   get BASE_URL() {
     return `http://${this.HOST}:${this.PORT}`;

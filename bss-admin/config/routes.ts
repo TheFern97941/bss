@@ -72,38 +72,28 @@ export default [
         redirect: '/sys/admin',
       },
       {
-        name: 'adminGroup',
-        routes: [
-          {
-            path: '/sys/admin',
-            name: 'admin',
-            component: './Sys/Admin',
-            icon: 'TeamOutlined',
-          },
-          {
-            path: '/sys/role',
-            name: 'role',
-            component: './Sys/SysRole',
-            icon: 'ClusterOutlined'
-          },
-          {
-            path: '/sys/module',
-            name: 'module',
-            component: './Sys/SysModule',
-            icon: 'BlockOutlined'
-          },
-        ]
+        path: '/sys/admin',
+        name: 'admin',
+        component: './Sys/Admin',
+        icon: 'TeamOutlined',
       },
       {
-        name: 'settingGroup',
-        routes: [
-          {
-            path: '/sys/setting/authSetting',
-            name: 'AuthSetting',
-            component: './Sys/MainConfig/AuthSetting',
-            icon: 'SettingOutlined',
-          }
-        ]
+        path: '/sys/role',
+        name: 'role',
+        component: './Sys/SysRole',
+        icon: 'ClusterOutlined'
+      },
+      {
+        path: '/sys/module',
+        name: 'module',
+        component: './Sys/SysModule',
+        icon: 'BlockOutlined'
+      },
+      {
+        path: '/sys/setting/authSetting',
+        name: 'AuthSetting',
+        component: './Sys/MainConfig/AuthSetting',
+        icon: 'SettingOutlined',
       }
     ],
   },

@@ -1,6 +1,11 @@
 import { useModelInitState } from '@/hooks/useModelInitState';
-import { PageContainer, ProForm, ProFormGroup, ProFormText } from '@ant-design/pro-components';
-import { ProFormUploadButton } from '@ant-design/pro-form';
+import {
+  PageContainer,
+  ProForm,
+  ProFormGroup,
+  ProFormText,
+  ProFormUploadButton,
+} from '@ant-design/pro-components';
 import { Button, message } from 'antd';
 import { useState } from 'react';
 import { Result } from '@/requestErrorConfig';
@@ -8,12 +13,13 @@ import { redirectByTimeout } from '@/utils/redirectUtil';
 import { getToken } from '@/utils/authUtil';
 import { useFetchUserInfo } from '@/hooks/useFetchUserInfo';
 import {postAccount} from "@/services/backend/adminAccountController";
+import AdminModel = API.AdminModel;
 
 export default () => {
   const [readonly, setReadonly] = useState(false);
 
   const { initialState } = useModelInitState();
-  const initialUser = initialState?.currentUser || {};
+  const initialUser = initialState?.currentUser || {} as AdminModel;
 
   const currentUser = {
     ...initialUser,

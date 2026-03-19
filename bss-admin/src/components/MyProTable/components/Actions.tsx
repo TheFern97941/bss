@@ -8,16 +8,10 @@ export interface ActionsProps {
   direction?: "horizontal" | "vertical";
 }
 
-export function Actions({children, size, direction}: ActionsProps) {
+export function Actions({children, size = "small", direction = "horizontal"}: ActionsProps) {
   return <Space.Compact size={size} direction={direction}>
     {
       children
     }
   </Space.Compact>;
-}
-
-
-Actions.defaultProps = {
-  size: "small",
-  direction: "horizontal"
 }

@@ -1,10 +1,14 @@
-import { ProTable } from '@ant-design/pro-components';
-import type { ParamsType } from '@ant-design/pro-provider';
-import type { ActionType, ProColumns, ProTableProps } from '@ant-design/pro-table/es/typing';
+import {
+  ActionType,
+  ParamsType,
+  ProColumns,
+  ProTable,
+  ProTableProps,
+  RequestData,
+} from '@ant-design/pro-components';
 import { Command, DefaultTableAction, ToAction, toToolBarRender } from './components/Command';
 import {Button, Space, TableProps} from 'antd';
 import { SortOrder } from 'antd/es/table/interface';
-import {RequestData} from "@ant-design/pro-table/lib";
 import { dateFormatter } from '@/utils/dateUtils';
 import { useMemo, useState } from 'react';
 import { Actions } from './components/Actions';

@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Alert, Space, Spin} from 'antd';
 import {LoadingOutlined} from '@ant-design/icons';
-import {ProColumns} from "@ant-design/pro-table";
+import {ProColumns} from "@ant-design/pro-components";
 import MyProTable from "@/components/MyProTable";
 import isUndefined from "lodash/isUndefined";
 import {ButtonType} from "antd/lib/button/buttonHelpers";
@@ -104,7 +104,7 @@ export function MultiActionDialog<T extends Record<PropertyKey, any>, ValueType 
             search={false}
             rowSelection={false}
             toolBarRender={false}
-            columns={[...columns, {
+            columns={[...columns as any[], {
               title: '操作结果',
               fixed: 'right',
               width:120,

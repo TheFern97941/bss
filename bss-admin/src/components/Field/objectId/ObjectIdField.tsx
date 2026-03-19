@@ -1,8 +1,8 @@
 import { Tooltip, Typography } from 'antd';
 import type { ReactElement } from 'react';
-import type { ProColumns } from '@ant-design/pro-table';
 import type { ColumnType } from 'antd/lib/table/interface';
 import { Link } from "@@/exports";
+import { ProColumns } from '@ant-design/pro-components';
 
 const { Paragraph } = Typography;
 

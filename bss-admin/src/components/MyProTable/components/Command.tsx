@@ -1,5 +1,5 @@
 import React, {useMemo} from "react";
-import {ProColumns} from "@ant-design/pro-table";
+import {ProColumns} from "@ant-design/pro-components";
 import {isFunction} from "lodash";
 import {ButtonType} from "antd/lib/button/buttonHelpers";
 import {Action} from "@/components/MyProTable/components/Action";

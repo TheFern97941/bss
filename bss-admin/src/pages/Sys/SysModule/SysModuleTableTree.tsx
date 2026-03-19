@@ -3,12 +3,12 @@ import columns from "@/pages/Sys/SysModule/columns";
 import commands from "@/pages/Sys/SysModule/commands";
 import MyProTable from "@/components/MyProTable";
 import useAbortController from "@/hooks/useAbortController";
-import type {SearchConfig} from "@ant-design/pro-table/es/components/Form/FormRender";
+import type {ProTableProps} from "@ant-design/pro-components";
 
 interface SysModuleTableTreeProps {
   selectedKeys?: string[];
   onChangeSelectedKeys?: (selectKeys: string[]) => void;
-  search?: false | SearchConfig;
+  search?: ProTableProps<any, any>['search'];
 }
 
 const SysModuleTableTree = ({selectedKeys, onChangeSelectedKeys, search}: SysModuleTableTreeProps) => {
